@@ -613,7 +613,7 @@ void MainWindow::showStatusInfo(QString info, bool isGood)
 
 void MainWindow::serialDataAvailable()
 {
-    while (mSerialPort->bytesAvailable() > 0) {
+    while (mSerialPort->isOpen() && mSerialPort->bytesAvailable() > 0) {
         QByteArray data = mSerialPort->readAll();
         mPacketInterface->processData(data);
     }
@@ -647,10 +647,12 @@ void MainWindow::serialPortError(QSerialPort::SerialPortError error)
 
     if(!message.isEmpty()) {
         showStatusInfo(message, false);
+        mSerialPort->blockSignals(true);
 
         if(mSerialPort->isOpen()) {
             mSerialPort->close();
         }
+        mSerialPort->blockSignals(false);
     }
 }
 
