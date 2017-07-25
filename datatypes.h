@@ -376,6 +376,12 @@ typedef struct {
 } nrf_config;
 
 typedef struct {
+    int min_pos;
+    int max_pos;
+    unsigned int rpm;
+} pos_config;
+
+typedef struct {
     // Settings
     quint8 controller_id;
     quint32 timeout_msec;
@@ -400,7 +406,11 @@ typedef struct {
 
     // NRF application settings
     nrf_config app_nrf_conf;
+
+    //POS application settings
+    pos_config app_pos_conf;
 } app_configuration;
+
 
 typedef struct {
     int js_x;

@@ -23,6 +23,8 @@
 #include <QTimer>
 #include <QByteArray>
 #include <QSerialPort>
+#include <iostream>
+#include <fstream>
 
 #include "qcustomplot.h"
 #include "packetinterface.h"
@@ -186,6 +188,10 @@ private:
     bool mMcconfLoaded;
     bool mAppconfLoaded;
     detect_res_t mDetectRes;
+
+    std::ofstream batCur_stream;
+    std::ofstream motorVolt_stream;
+
 
     QVector<QVector<double> > mExperimentSamples;
 

@@ -91,6 +91,10 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
     mDetectRes.updated = false;
+    batCur_stream.open("BatCurrent.dat");
+    batCur_stream << "Battery Current, Motor Current, RPM, Lin Pot Voltage" << std::endl;
+    motorVolt_stream.open("MotorVolt.dat");
+    motorVolt_stream << "Phase 1, Phase 2, Phase 3, Encoder Position" << std::endl;
 
     connect(mSerialPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
@@ -165,6 +169,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    batCur_stream.close();
+    motorVolt_stream.close();
     delete ui;
 }
 
@@ -1240,6 +1246,13 @@ void MainWindow::timerSlot()
 
             graphIndex = 0;
 
+            for (int i = 0; i < ph1.size(); ++i) {
+                motorVolt_stream << ph1[i] << ", ";
+                motorVolt_stream << ph2[i] << ", ";
+                motorVolt_stream << ph3[i] << ", ";
+                motorVolt_stream << position[i] << std::endl;
+            }
+
             if (ui->showPh1Box->isChecked()) {
                 ui->voltagePlot->addGraph();
                 ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph1);
@@ -1437,6 +1450,11 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
     appendDoubleAndTrunc(&dutyVec, values.duty_now, maxS);
     appendDoubleAndTrunc(&rpmVec, values.rpm, maxS);
     appendDoubleAndTrunc(&voltInVec, values.v_in, maxS);
+
+    batCur_stream << values.current_in << ", ";
+    batCur_stream << values.current_motor << ", ";
+    batCur_stream << values.rpm << ", ";
+    batCur_stream << values.temp_pcb << std::endl;
 
     QPen dotPen;
     dotPen.setStyle(Qt::DotLine);
@@ -2033,6 +2051,10 @@ void MainWindow::appconfReceived(app_configuration appconf)
     ui->appconfNrfAddrB2Box->setValue(appconf.app_nrf_conf.address[2]);
     ui->appconfNrfUseAckBox->setChecked(appconf.app_nrf_conf.send_crc_ack);
 
+    ui->appconfPosMin->setValue(appconf.app_pos_conf.min_pos);
+    ui->appconfPosMax->setValue(appconf.app_pos_conf.max_pos);
+    ui->appconfPosRPM->setValue(appconf.app_pos_conf.rpm);
+
     mAppconfLoaded = true;
     showStatusInfo("APPCONF Received", true);
 }
@@ -2579,6 +2601,10 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_nrf_conf.address[0] = ui->appconfNrfAddrB0Box->value();
     appconf.app_nrf_conf.address[1] = ui->appconfNrfAddrB1Box->value();
     appconf.app_nrf_conf.address[2] = ui->appconfNrfAddrB2Box->value();
+
+    appconf.app_pos_conf.min_pos = ui->appconfPosMin->value();
+    appconf.app_pos_conf.max_pos = ui->appconfPosMax->value();
+    appconf.app_pos_conf.rpm = ui->appconfPosRPM->value();
 
     mPacketInterface->setAppConf(appconf);
 }
