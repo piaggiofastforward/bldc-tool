@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     batCur_stream.open("BatCurrent.dat");
     batCur_stream << "Battery Current, Motor Current, RPM, Lin Pot Voltage" << std::endl;
     motorVolt_stream.open("MotorVolt.dat");
-    motorVolt_stream << "Phase 1, Phase 2, Phase 3, Encoder Position" << std::endl;
+    motorVolt_stream << "Phase 1, Phase 2, Phase 3, Rotor Position" << std::endl;
 
     connect(mSerialPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
