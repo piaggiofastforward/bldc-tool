@@ -20,12 +20,15 @@
 
 #include <QWidget>
 #include "packetinterface.h"
+#include <iostream>
+#include <fstream>
 
 class RtDataWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit RtDataWidget(QWidget *parent = 0);
+    ~RtDataWidget();
     void setValues(MC_VALUES &values);
 
 signals:
@@ -37,6 +40,7 @@ protected:
 
 private:
     MC_VALUES mValues;
+    std::ofstream batCur_stream;
 
 };
 

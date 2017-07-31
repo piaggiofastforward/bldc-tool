@@ -22,6 +22,13 @@
 RtDataWidget::RtDataWidget(QWidget *parent) :
     QWidget(parent)
 {
+    batCur_stream.open("BatCurrent.dat");
+    batCur_stream << "Battery Current, Motor Current, RPM, Lin Pot Voltage" << std::endl;
+}
+
+RtDataWidget::~RtDataWidget()
+{
+    batCur_stream.close();
 }
 
 void RtDataWidget::setValues(MC_VALUES &values)
@@ -91,6 +98,11 @@ void RtDataWidget::paintEvent(QPaintEvent *event)
                 mValues.tachometer,
                 mValues.tachometer_abs,
                 mValues.v_in);
+
+    batCur_stream << mValues.current_in << ", ";
+    batCur_stream << mValues.current_motor << ", ";
+    batCur_stream << mValues.rpm << ", ";
+    batCur_stream << mValues.tachometer << std::endl;
 
     painter.setOpacity(0.7);
     painter.fillRect(vidw - box2_w, 0, box2_w, box_h, Qt::black);

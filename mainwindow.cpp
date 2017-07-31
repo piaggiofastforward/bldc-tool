@@ -91,8 +91,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
     mDetectRes.updated = false;
-    batCur_stream.open("BatCurrent.dat");
-    batCur_stream << "Battery Current, Motor Current, RPM, Lin Pot Voltage" << std::endl;
     motorVolt_stream.open("MotorVolt.dat");
     motorVolt_stream << "Phase 1, Phase 2, Phase 3, Rotor Position" << std::endl;
 
@@ -169,7 +167,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    batCur_stream.close();
     motorVolt_stream.close();
     delete ui;
 }
@@ -1453,10 +1450,6 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
     appendDoubleAndTrunc(&rpmVec, values.rpm, maxS);
     appendDoubleAndTrunc(&voltInVec, values.v_in, maxS);
 
-    batCur_stream << values.current_in << ", ";
-    batCur_stream << values.current_motor << ", ";
-    batCur_stream << values.rpm << ", ";
-    batCur_stream << values.temp_pcb << std::endl;
 
     QPen dotPen;
     dotPen.setStyle(Qt::DotLine);

@@ -189,7 +189,6 @@ private:
     bool mAppconfLoaded;
     detect_res_t mDetectRes;
 
-    std::ofstream batCur_stream;
     std::ofstream motorVolt_stream;
 
 
