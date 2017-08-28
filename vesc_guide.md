@@ -1,10 +1,10 @@
 
-#FOC Troubleshooting
+# FOC Troubleshooting
 
-###Overview of control loops
+### Overview of control loops
 In its most fundamental implementation, field oriented control is a current controller. The controller takes a rotor position and current demand as inputs, and seeks to provide the correct currents through the phases to generate flux perpendicular to the rotor. A PID current controller is used to adjust the duty cycles of the phases to achieve a current demand. In torque control mode, this is the only control loop, since current is directly proportional to torque, while in speed and position control a second control loop adjusts the torque demand to achieve a speed or position demand.
 
-###FOC motor parameters
+### FOC motor parameters
 
 Flux Linkage is the magnetic flux through a coil, multiplied by the number of turns per coil. This measurement is used in the sensorless observer routine, in order to find the position of the rotor. Even when the controller is not being run in sensorless mode, it will still switch to sensorless at high speeds for better performance.
 
@@ -21,12 +21,12 @@ http://vedder.se/forums/viewtopic.php?t=131#p693
 
 
 
-###ABI encoder
+### ABI encoder
 
 An ABI encoder can be used for commutation. This approach increases the resolution of rotor angle, which allows the motor smoother commutation once moving. However, since the AB signals of an ABI encoder are not absolute, the controller cannot determine the position of the shaft until the motor is turned enough to receive the first index pulse. The current VESC FOC encoder implementation starts the motor at 40% power in senorless mode until the rotor reaches the index position, at which point it will begin using the encoder for rotor position feedback.
 
 
-###Hall effect
+### Hall effect
 
 A motor may still turn even with an incorrect hall configuration. This will cause excessive heat dissipation and instability. Continuing to run the motor in this state is highly inefficient, and can burn out windings and/or damage the controller. The best way to determine if this is occurring is by examining the phase current or BEMF plots and looking for erratic behavior.
 
@@ -43,7 +43,7 @@ As shown in the figure, there is never a point where the hall effect sensors are
 
 If any other values are in these positions, they can clue you into what is wrong with your system.
 
-####Common problems:
+#### Common problems:
 ---
 Failure mode: Only column 0 succeeds
 
